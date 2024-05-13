@@ -1,14 +1,16 @@
+// Import necessary libraries and components
 import { useState } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 import { ThreeDots } from 'react-loader-spinner';
+
 import { Typography, Grid, TextField, Button, Box } from '@mui/material';
+import { useFormik } from 'formik';
 
 import styles from './signup.module.css';
 import { useSignup } from '../../services/queries-and-mutations/auth';
 import { SignupFormData } from '../../services/utils/interface';
+import { signUpSchema } from '../../Schema';
 
 const Signup = () => {
 	const navigate = useNavigate();
@@ -22,22 +24,12 @@ const Signup = () => {
 			password: '',
 			confirm_password: '',
 		},
-		validationSchema: Yup.object({
-			username: Yup.string().required('User name is required'),
-			email: Yup.string()
-				.email('Invalid email address')
-				.required('Email is required'),
-			password: Yup.string().required('Password is required'),
-			confirm_password: Yup.string()
-				.oneOf([Yup.ref('password')], 'Passwords must match')
-				.required('Please re-type password'),
-		}),
+		validationSchema: signUpSchema,
 		onSubmit: async (values) => {
 			setLoading(true);
 			try {
 				await signup.mutateAsync(values);
 				toast('Registered successfully', { type: 'success' });
-				navigate('/todo-list');
 			} catch (error: any) {
 				toast(error.response?.data?.message || 'An error occurred', {
 					type: 'error',

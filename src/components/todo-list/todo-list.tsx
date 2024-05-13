@@ -1,7 +1,8 @@
+// Import necessary libraries and components
+
 import * as React from 'react';
-import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
-import * as Yup from 'yup';
+
 import {
 	Box,
 	Typography,
@@ -30,6 +31,8 @@ import {
 import { styled } from '@mui/material/styles';
 import { Add as AddIcon } from '@mui/icons-material';
 import { Clear as ClearIcon } from '@mui/icons-material';
+import { useFormik } from 'formik';
+
 
 import { Task, TaskFormValues, TasksProps } from '../../services/utils/interface';
 import styles from './todo-list.module.css';
@@ -37,6 +40,7 @@ import {
 	useTasks,
 	useUpsertTask,
 } from '../../services/queries-and-mutations/tasks';
+import { taskSchema } from '../../Schema';
 
 // Add new task Modal
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -102,11 +106,7 @@ const Tasks: React.FC<TasksProps> = () => {
 				setSubmitting(false);
 			}
 		},
-		validationSchema: Yup.object({
-			title: Yup.string().required('Title is required'),
-			description: Yup.string().required('Description is required'),
-			completed: Yup.boolean().required('Status is required'),
-		}),
+		validationSchema: taskSchema
 	});
 
 	const editTask = (selectedTask: Task) => {

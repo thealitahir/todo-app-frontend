@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { addNewTask, browseTasks, updateTask } from '../api/tasks';
 import { Task } from '../utils/interface';
+import { toast } from 'react-toastify';
 
 export function useTasks() {
 	return useQuery<Task[], Error>('Tasks', browseTasks, {
@@ -17,6 +18,22 @@ export function useUpsertTask() {
 			onSuccess: (data) => {
 				queryClient.setQueryData<Task[]>('Tasks', (old) => setTasks(old, data));
 			},
+			onError:(err: any) => {
+				const error = err?.response?.data.message?.message
+				console.log('on error', error)
+	
+				if(typeof error === 'string') {
+					toast.error(error)
+				} else if(typeof error === 'object') {
+					error.forEach((element: string, index: number) => {
+						if(index === 0) {
+							toast.error(element)
+						}
+					});
+				}  else {
+					toast.error('Some Error Occured')
+				}
+			}
 		}
 	);
 }

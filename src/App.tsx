@@ -7,33 +7,39 @@ import Login from './components/login/login';
 import Signup from './components/signup/signup';
 import ToDoList from './components/todo-list/todo-list';
 import Layout from './components/layout/layout';
+import { PrivateRoutes, PublicRoutes } from './routes';
+import { RouteConfig } from './routes/Interface/interface';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
 	const queryClient = new QueryClient();
+	const token = localStorage.getItem("token");
 
 	return (
+		<ErrorBoundary>
 		<div className='App'>
 			<QueryClientProvider client={queryClient}>
-			<Layout>
-				<BrowserRouter>
-					<Routes><Route
-								path='/'
-								element={<Login />}
-							/>
-							<Route
-								path='signup'
-								element={<Signup />}
-							/>
-							<Route
-								path='todo-list'
-								element={<ToDoList />}
-							/>
-					</Routes>
-				</BrowserRouter>
+				<Layout>
+					<BrowserRouter>
+						<Routes>
+							{!token
+								? PublicRoutes.map(
+									({ component, path }: RouteConfig, index: number) => (
+										<Route key={index} path={path} element={component} />
+									)
+								)
+								: PrivateRoutes.map(
+									({ component, path }: RouteConfig, index: number) => (
+										<Route key={index} path={path} element={component} />
+									)
+								)}
+						</Routes>
+					</BrowserRouter>
 				</Layout>
 				<ToastContainer />
 			</QueryClientProvider>
 		</div>
+		</ErrorBoundary>
 	);
 }
 

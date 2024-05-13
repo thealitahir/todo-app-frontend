@@ -2,21 +2,23 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
+import { ThreeDots } from 'react-loader-spinner';
+
+
 import { Box } from '@mui/system';
 import { Typography, Grid, TextField, Button } from '@mui/material';
 import { useFormik, FormikHelpers } from 'formik';
-import { ThreeDots } from 'react-loader-spinner';
+
 import {
 	LoginDTO,
 	LoginFormValues,
 } from '../../services/utils/interface';
 import { useLogin } from '../../services/queries-and-mutations/auth';
 import styles from './login.module.css';
+import { loginSchema } from '../../Schema';
 
 // Login component
 const Login: React.FC = () => {
-	const navigate = useNavigate();
 	const login = useLogin();
 	const [loading, setLoading] = useState<boolean>(false);
 
@@ -35,8 +37,6 @@ const Login: React.FC = () => {
 			try {
 				await login.mutateAsync(data);
 				toast('Logged in successfully', { type: 'success' });
-				// navigate('/todo-list');
-				window.location.href = '/todo-list'
 			} catch (error: any) {
 				toast(error.response.data.message, { type: 'error' });
 			} finally {
@@ -44,12 +44,7 @@ const Login: React.FC = () => {
 				setSubmitting(false);
 			}
 		},
-		validationSchema: Yup.object({
-			email: Yup.string()
-				.email('Invalid email address')
-				.required('Email is required'),
-			password: Yup.string().required('Password is required'),
-		}),
+		validationSchema: loginSchema
 	});
 
 	return (
