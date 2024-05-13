@@ -30,8 +30,6 @@ export function useUpsertTask() {
 							toast.error(element)
 						}
 					});
-				}  else {
-					toast.error('Some Error Occured')
 				}
 			}
 		}

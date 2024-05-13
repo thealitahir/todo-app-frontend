@@ -25,8 +25,6 @@ export function useLogin() {
 						toast.error(element)
 					}
 				});
-			} else {
-				toast.error('Some Error Occured')
 			}
 		}
 	});
@@ -53,8 +51,6 @@ export function useSignup() {
 						toast.error(element)
 					}
 				});
-			}  else {
-				toast.error('Some Error Occured')
 			}
 		}
 	});

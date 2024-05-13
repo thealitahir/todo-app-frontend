@@ -38,7 +38,7 @@ const Login: React.FC = () => {
 				await login.mutateAsync(data);
 				toast('Logged in successfully', { type: 'success' });
 			} catch (error: any) {
-				toast(error.response.data.message, { type: 'error' });
+				toast(error?.response?.data?.message, { type: 'error' });
 			} finally {
 				setLoading(false);
 				setSubmitting(false);
